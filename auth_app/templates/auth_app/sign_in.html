@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0" style="background-color: #1a1a1d; color: white;">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4" style="color: rgb(153, 102, 204);">Вход в TaskMap</h3>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Имя пользователя</label>
+                            {{ form.username|add_class:"form-control" }}
+                            {% if form.username.errors %}
+                                <div class="text-danger small">{{ form.username.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Пароль</label>
+                            {{ form.password|add_class:"form-control" }}
+                            {% if form.password.errors %}
+                                <div class="text-danger small">{{ form.password.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn"
+                                style="background: rgb(153, 102, 204); color: white;">
+                                Войти
+                            </button>
+                        </div>
+                    </form>
+                    <div class="mt-3 text-center">
+                        <a href="{% url 'sign_up' %}" style="color: rgb(153, 102, 204);">Нет аккаунта? Зарегистрируйтесь</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
