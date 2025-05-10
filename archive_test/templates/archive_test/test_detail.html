@@ -1,11 +1,109 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load dict_extras %}
+
 {% block title %}{{ language.name }} Тесты{% endblock %}
+
 {% block content %}
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        background-color: rgb(31, 32, 35) !important;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    .container.mt-4 {
+        flex: 1 0 auto;
+    }
+    footer {
+        flex-shrink: 0;
+    }
+    .custom-btn {
+        background-color: #9966CC !important;
+        border-color: #ffffff !important;
+        color: #ffffff !important;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        outline: none !important;
+        box-shadow: 0 4px 15px rgba(153, 102, 204, 0.3);
+    }
+    .custom-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(153, 102, 204, 0.5);
+    }
+    .custom-btn:active {
+        transform: translateY(1px);
+    }
+    .card {
+        background: #2a2a2a;
+        border: none;
+        color: #cccccc;
+    }
+    .card-title, .card-body h5 {
+        color: #ffffff;
+    }
+    .accordion-button {
+        background-color: #2a2a2a !important;
+        color: #cccccc;
+    }
+    .accordion-button:not(.collapsed) {
+        color: #ffffff;
+        background-color: #3a3a3a !important;
+    }
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: #9966CC;
+    }
+    .list-group-item {
+        background-color: #2a2a2a;
+        color: #cccccc;
+    }
+    .list-group-item.active {
+        background-color: #9966CC;
+        border-color: #9966CC;
+    }
+    .form-check-label {
+        color: #cccccc;
+    }
+    .btn-primary {
+        background-color: #9966CC;
+        border-color: #ffffff;
+    }
+    .btn-primary:hover {
+        background-color: #b388ff;
+    }
+    .btn-outline-secondary {
+        color: #cccccc;
+        border-color: #444;
+    }
+    .btn-outline-secondary:hover {
+        color: #ffffff;
+        background-color: #444;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #ffffff;
+    }
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+    .alert-info {
+        background-color: #2a2a2a;
+        border-color: #444;
+        color: #cccccc;
+    }
+    .alert-info h5 {
+        color: #ffffff;
+    }
+</style>
+
 <div class="container-fluid py-4">
     <div class="row">
-        <!-- Левая панель: навигация по главам -->
+
         <div class="col-md-3">
             <h5 class="mb-3">Навигация</h5>
             <div class="accordion" id="chapterAccordion">
@@ -39,11 +137,9 @@
                     </div>
                 </div>
                 {% endfor %}
-            </div>            
+            </div>
         </div>
-        
 
-        <!-- Правая панель: вопрос и ответы -->
         <div class="col-md-9">
             <div class="card shadow border-0 mb-3">
                 <div class="card-body">
@@ -61,7 +157,7 @@
                             </label>
                         </div>
                         {% endfor %}
-                        <button type="submit" class="btn btn-primary mt-3">Проверить</button>
+                        <button type="submit" class="btn custom-btn mt-3">Проверить</button>
                         {% if feedback == 'correct' %}
                             <p class="text-success mt-2">Правильно ✅</p>
                         {% elif feedback == 'incorrect' %}
@@ -69,7 +165,6 @@
                         {% endif %}
                     </form>
                     {% if question_number == total_questions %}
-                        <!-- Показать кнопку "Закончить тест" -->
                         <form method="post" class="mt-3">
                             {% csrf_token %}
                             <input type="hidden" name="finish" value="true">
@@ -82,11 +177,11 @@
                         {% else %}
                             <span></span>
                         {% endif %}
-                    
+
                         {% if next_id %}
                             <a href="?q={{ next_id }}" class="btn btn-outline-secondary">Следующий &rarr;</a>
                         {% endif %}
-                    </div>                                       
+                    </div>
                 </div>
             </div>
 
@@ -109,7 +204,6 @@
                 <h5>🎉 Вы завершили тест!</h5>
                 <p>Результат: {{ correct_count }} правильных ответов из {{ total_questions }}!</p>
                 <p>Процент правильных: {{ percent_correct }}%</p>
-
             </div>
             {% endif %}
         </div>

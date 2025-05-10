@@ -1,41 +1,105 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load widget_tweaks %}
+
 {% block title %}Вход{% endblock %}
 
 {% block content %}
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        background-color: rgb(31, 32, 35) !important;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    .container.mt-4 {
+        flex: 1 0 auto;
+    }
+    footer {
+        flex-shrink: 0;
+    }
+    .custom-btn {
+        background-color: #9966CC !important;
+        border-color: #ffffff !important;
+        color: #ffffff !important;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        outline: none !important;
+        box-shadow: 0 4px 15px rgba(153, 102, 204, 0.3);
+    }
+    .custom-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(153, 102, 204, 0.5);
+    }
+    .custom-btn:active {
+        transform: translateY(1px);
+    }
+    .auth-card {
+        background: #2a2a2a;
+        border-radius: 15px;
+        padding: 30px;
+        color: #cccccc;
+    }
+    .form-label {
+        color: #cccccc;
+        font-weight: 500;
+    }
+    .form-control {
+        background-color: #3a3a3a;
+        border: 1px solid #444;
+        color: #cccccc;
+        border-radius: 8px;
+    }
+    .form-control:focus {
+        background-color: #3a3a3a;
+        border-color: #9966CC;
+        color: #ffffff;
+        box-shadow: 0 0 5px rgba(153, 102, 204, 0.3);
+    }
+    .text-danger {
+        font-size: 0.875rem;
+    }
+    .auth-link {
+        color: #9966CC;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .auth-link:hover {
+        color: #b388ff;
+    }
+</style>
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
-            <div class="card shadow-lg border-0" style="background-color: #1a1a1d; color: white;">
-                <div class="card-body p-4">
-                    <h3 class="text-center mb-4" style="color: rgb(153, 102, 204);">Вход в TaskMap</h3>
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label">Имя пользователя</label>
-                            {{ form.username|add_class:"form-control" }}
-                            {% if form.username.errors %}
-                                <div class="text-danger small">{{ form.username.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Пароль</label>
-                            {{ form.password|add_class:"form-control" }}
-                            {% if form.password.errors %}
-                                <div class="text-danger small">{{ form.password.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="d-grid mt-4">
-                            <button type="submit" class="btn"
-                                style="background: rgb(153, 102, 204); color: white;">
-                                Войти
-                            </button>
-                        </div>
-                    </form>
-                    <div class="mt-3 text-center">
-                        <a href="{% url 'sign_up' %}" style="color: rgb(153, 102, 204);">Нет аккаунта? Зарегистрируйтесь</a>
+            <div class="auth-card">
+                <h3 class="text-center mb-4" style="color: #9966CC;">Вход в TaskMap</h3>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label">Имя пользователя</label>
+                        {{ form.username|add_class:"form-control" }}
+                        {% if form.username.errors %}
+                            <div class="text-danger">{{ form.username.errors.0 }}</div>
+                        {% endif %}
                     </div>
+                    <div class="mb-4">
+                        <label class="form-label">Пароль</label>
+                        {{ form.password|add_class:"form-control" }}
+                        {% if form.password.errors %}
+                            <div class="text-danger">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn custom-btn">Войти</button>
+                    </div>
+                </form>
+                <div class="mt-4 text-center">
+                    <a href="{% url 'sign_up' %}" class="auth-link">Нет аккаунта? Зарегистрируйтесь</a>
                 </div>
             </div>
         </div>
