@@ -1,43 +1,108 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}Профиль{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        background-color: rgb(31, 32, 35) !important;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    .container.mt-4 {
+        flex: 1 0 auto;
+    }
+    footer {
+        flex-shrink: 0;
+    }
+    .custom-btn {
+        background-color: #9966CC !important;
+        border-color: #ffffff !important;
+        color: #ffffff !important;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        outline: none !important;
+        box-shadow: 0 4px 15px rgba(153, 102, 204, 0.3);
+    }
+    .custom-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(153, 102, 204, 0.5);
+    }
+    .custom-btn:active {
+        transform: translateY(1px);
+    }
+    .profile-card {
+        background: #2a2a2a;
+        border-radius: 15px;
+        padding: 20px;
+        color: #cccccc;
+    }
+    .profile-icon {
+        background: #9966CC;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-bottom: 15px;
+    }
+    .table-dark {
+        background: #3a3a3a;
+        color: #cccccc;
+    }
+    .table-dark th {
+        background: #444;
+    }
+    .table-dark td {
+        background: #3a3a3a;
+        color: #cccccc;
+    }
+</style>
+
+<div id="app" class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card shadow border-0">
-                <div class="card-body">
-                    <h3 class="mb-4">👤 Профиль пользователя</h3>
-                    <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
-                    <p><strong>Email:</strong> {{ user.email }}</p>
+            <div class="profile-card">
+                <div class="profile-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 1a5 5 0 0 0-5 5v1h10v-1a5 5 0 0 0-5-5z"/>
+                    </svg>
+                </div>
+                <h3 class="mb-4" style="color: #ffffff;">Профиль пользователя</h3>
+                <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
 
-                    <hr>
-                    <h4 class="mt-4">📊 Прогресс по тестам</h4>
-                    {% if progress_data %}
-                        <table class="table table-bordered mt-3">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Язык</th>
-                                    <th>Всего вопросов</th>
-                                    <th>Правильных</th>
-                                    <th>Процент</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in progress_data %}
-                                <tr>
-                                    <td>{{ item.language }}</td>
-                                    <td>{{ item.total }}</td>
-                                    <td>{{ item.correct }}</td>
-                                    <td>{{ item.percent }}%</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p class="text-muted">Вы пока не проходили тесты.</p>
-                    {% endif %}
+                <hr style="border-color: #444;">
+                <h4 class="mt-4" style="color: #ffffff;">📊 Прогресс по тестам</h4>
+                <div v-if="progressData.length">
+                    <table class="table table-bordered mt-3 table-dark">
+                        <thead>
+                            <tr>
+                                <th>Язык</th>
+                                <th>Всего вопросов</th>
+                                <th>Правильных</th>
+                                <th>Процент</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in progressData" :key="item.language">
+                                <td>{{ item.language }}</td>
+                                <td>{{ item.total }}</td>
+                                <td>{{ item.correct }}</td>
+                                <td>{{ item.percent }}%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div v-else>
+                    <p class="text-muted">Вы пока не проходили тесты.</p>
                 </div>
             </div>
         </div>
