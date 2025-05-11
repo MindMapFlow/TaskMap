@@ -1,11 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="text-white">Теория по {{ language|upper }}</h2>
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        background-color: rgb(31, 32, 35) !important;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    .container.mt-4 {
+        flex: 1 0 auto;
+    }
+    footer {
+        flex-shrink: 0;
+    }
+    .card {
+        background: #2a2a2a;
+        border: none;
+        color: #cccccc;
+    }
+    .card-header {
+        background: #3a3a3a;
+        color: #ffffff;
+    }
+    .card-body {
+        padding: 20px;
+    }
+</style>
+
+<div class="container py-5">
+    <h2 class="text-white mb-4">Теория по {{ language|upper }}</h2>
     {% for theory in theories %}
         <div class="card my-3">
-            <div class="card-header bg-dark text-white">{{ theory.title }}</div>
+            <div class="card-header">{{ theory.title }}</div>
             <div class="card-body">
                 <p class="card-text">{{ theory.content|linebreaks }}</p>
             </div>
