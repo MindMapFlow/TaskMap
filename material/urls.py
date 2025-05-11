@@ -3,8 +3,6 @@ from . import views
 from .views import theory_view
 
 urlpatterns = [
-    path('', views.index, name='index_old'),
     path('archive-material/', views.archive_material, name='archive_material'),
-    path('achievements/', views.theory_view, name='theory_view'),
-    path('material/', views.theory_view, name='main_material'),
+    path('material/', views.theory_view, name='theory_view'),  # ✅ оставить только этот
 ]

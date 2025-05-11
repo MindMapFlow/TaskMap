@@ -22,7 +22,4 @@ class Topic(models.Model):
 
 class Theory(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True, blank=True)
-    content = models.TextField()
-
-    def __str__(self):
-        return f"Теория для: {self.topic.title}"
+    content = models.TextField(blank=True, null=True)  # 👈 вот тут
