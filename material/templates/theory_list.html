@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-white">Теория по {{ language|upper }}</h2>
+    {% for theory in theories %}
+        <div class="card my-3">
+            <div class="card-header bg-dark text-white">{{ theory.title }}</div>
+            <div class="card-body">
+                <p class="card-text">{{ theory.content|linebreaks }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-white">Пока нет материалов для этого языка.</p>
+    {% endfor %}
+</div>
+{% endblock %}
