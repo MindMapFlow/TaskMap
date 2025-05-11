@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Архив задач{% endblock %}
+{% block title %}Теория по программированию{% endblock %}
 
 {% block content %}
 <style>
@@ -37,17 +37,102 @@
     .custom-btn:active {
         transform: translateY(1px);
     }
-    h1 {
+    h2, h3, h4 {
         color: #ffffff;
     }
-    p {
+    .btn-outline-light {
+        color: #cccccc;
+        border-color: #444;
+    }
+    .btn-outline-light:hover {
+        background-color: #444;
+        color: #ffffff;
+    }
+    .btn-primary {
+        background-color: #9966CC;
+        border-color: #ffffff;
+    }
+    .btn-primary:hover {
+        background-color: #b388ff;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #ffffff;
+    }
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+    .btn-outline-info {
+        color: #cccccc;
+        border-color: #444;
+    }
+    .btn-outline-info:hover {
+        background-color: #444;
+        color: #ffffff;
+    }
+    .btn-outline-success {
+        color: #cccccc;
+        border-color: #444;
+    }
+    .btn-outline-success:hover {
+        background-color: #444;
+        color: #ffffff;
+    }
+    .card {
+        background: #2a2a2a;
+        border: none;
         color: #cccccc;
     }
 </style>
 
 <div class="container py-5">
-    <h1 class="mb-4">Архив материалов</h1>
-    <p>Тут будут размещаться все практические задания и проекты.</p>
-    <a href="{% url 'index' %}" class="btn custom-btn mt-4">Назад на главную</a>
+    <h2 class="mb-4">Выберите язык программирования:</h2>
+    <div class="btn-group mb-4">
+        {% for lang in languages %}
+            <a href="?lang={{ lang.id }}" class="btn btn-outline-light btn-sm {% if selected_lang == lang.id|stringformat:'s' %}btn-primary{% endif %}">
+                {{ lang.name }}
+            </a>
+        {% endfor %}
+        {% if selected_lang %}
+            <a href="{% url 'theory_view' %}" class="btn btn-danger btn-sm">Сбросить</a>
+        {% endif %}
+    </div>
+
+    {% if selected_lang %}
+        <h3 class="mb-3">Разделы</h3>
+        <div class="btn-group mb-4">
+            {% for section in sections %}
+                <a href="?lang={{ selected_lang }}&section={{ section.id }}" class="btn btn-outline-info btn-sm {% if selected_section == section.id|stringformat:'s' %}btn-primary{% endif %}">
+                    {{ section.title }}
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if selected_section %}
+        <h4 class="mb-3">Темы</h4>
+        <div class="btn-group mb-4">
+            {% for topic in topics %}
+                <a href="?lang={{ selected_lang }}&section={{ selected_section }}&topic={{ topic.id }}" class="btn btn-outline-success btn-sm {% if selected_topic == topic.id|stringformat:'s' %}btn-primary{% endif %}">
+                    {{ topic.title }}
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if selected_topic and theories %}
+        <h4 class="mb-3">Теория</h4>
+        {% for theory in theories %}
+            <div class="card bg-secondary mb-3">
+                <div class="card-body">
+                    {{ theory.content|linebreaks }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="mb-4">
+        <a href="{% url 'index' %}" class="btn custom-btn">← Назад в меню</a>
+    </div>
 </div>
 {% endblock %}
