@@ -34,7 +34,7 @@
 ### 1. Клонируй проект
 
 ```bash
-git clone https://github.com/yourusername/TaskMap.git
+git clone https://github.com/MindMapFlow/TaskMap.git
 cd TaskMap
 ```
 
