@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Теория по программированию</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+<body class="bg-dark text-white">
+<div class="container py-5">
+
+    <h2>Выберите язык программирования:</h2>
+    <div class="btn-group mb-4">
+    {% for lang in languages %}
+        <a href="?lang={{ lang.id }}" class="btn btn-outline-light btn-sm {% if selected_lang == lang.id|stringformat:'s' %}btn-primary{% endif %}">
+            {{ lang.name }}
+        </a>
+    {% endfor %}
+    {% if selected_lang %}
+        <a href="{% url 'theory_view' %}" class="btn btn-danger btn-sm">Сбросить</a>
+    {% endif %}
+</div>
+
+
+    {% if selected_lang %}
+        <h3>Разделы</h3>
+        <div class="btn-group mb-4">
+            {% for section in sections %}
+                <a href="?lang={{ selected_lang }}&section={{ section.id }}" class="btn btn-outline-info btn-sm {% if selected_section == section.id|stringformat:'s' %}btn-primary{% endif %}">
+                    {{ section.title }}
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if selected_section %}
+        <h4>Темы</h4>
+        <div class="btn-group mb-4">
+            {% for topic in topics %}
+                <a href="?lang={{ selected_lang }}&section={{ selected_section }}&topic={{ topic.id }}" class="btn btn-outline-success btn-sm {% if selected_topic == topic.id|stringformat:'s' %}btn-primary{% endif %}">
+                    {{ topic.title }}
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if selected_topic and theories %}
+        <h4>Теория</h4>
+        {% for theory in theories %}
+            <div class="card bg-secondary mb-3">
+                <div class="card-body">
+                    {{ theory.content|linebreaks }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+</div>
+<div class="mb-4">
+    <a href="{% url 'index' %}" class="btn btn-outline-warning btn-sm">← Назад в меню</a>
+</div>
+
+<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

@@ -6,5 +6,5 @@ urlpatterns = [
     path('auth/', include('auth_app.urls')),
     path('', include('core.urls')),
     path('tests/', include('archive_test.urls')),
-
+    path('material/', include('material.urls')),  # 👈 добавь эту строку
 ]
