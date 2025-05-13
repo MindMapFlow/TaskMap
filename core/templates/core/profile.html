@@ -78,32 +78,29 @@
                 <h3 class="mb-4" style="color: #ffffff;">Профиль пользователя</h3>
                 <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
                 <p><strong>Email:</strong> {{ user.email }}</p>
+<h2>Ваш прогресс</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Язык</th>
+      <th>Правильных</th>
+      <th>Всего</th>
+      <th>Процент</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in progress_data %}
+    <tr>
+      <td>{{ row.language }}</td>
+      <td>{{ row.correct }}</td>
+      <td>{{ row.total }}</td>
+      <td>{{ row.percent }}%</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-                <hr style="border-color: #444;">
-                <h4 class="mt-4" style="color: #ffffff;">📊 Прогресс по тестам</h4>
-                <div v-if="progressData.length">
-                    <table class="table table-bordered mt-3 table-dark">
-                        <thead>
-                            <tr>
-                                <th>Язык</th>
-                                <th>Всего вопросов</th>
-                                <th>Правильных</th>
-                                <th>Процент</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="item in progressData" :key="item.language">
-                                <td>{{ item.language }}</td>
-                                <td>{{ item.total }}</td>
-                                <td>{{ item.correct }}</td>
-                                <td>{{ item.percent }}%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div v-else>
-                    <p class="text-muted">Вы пока не проходили тесты.</p>
-                </div>
+
             </div>
         </div>
     </div>

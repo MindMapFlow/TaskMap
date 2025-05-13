@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}{{ test.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-lg">
+    <div class="card-body">
+
+      <h2 class="mb-4 text-center text-dark">{{ test.title }}</h2>
+
+      {% if message %}
+        <div class="alert alert-warning text-dark">{{ message }}</div>
+
+      {% elif finished %}
+  <div class="alert alert-success text-center text-dark">
+    <h4>✅ Поздравляем! Вы прошли тест.</h4>
+    <p class="mt-2">Вы правильно ответили на {{ correct_count }} из {{ total_questions }} вопросов.</p>
+    <a href="{% url 'language_list' %}" class="btn btn-primary mt-3">К выбору языков</a>
+  </div>
+
+      {% else %}
+        {% if restart %}
+          <div class="alert alert-danger">❌ Ответ неверный. Тест начинается заново.</div>
+        {% endif %}
+
+        <p class="text-muted text-end">Вопрос {{ question_index|add:1 }} из {{ total_questions }}</p>
+
+        <form method="post">
+          {% csrf_token %}
+          <h5 class="mb-3 text-dark">{{ question.text }}</h5>
+
+          {% for answer in answers %}
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="answer" id="answer{{ answer.id }}" value="{{ answer.id }}" required>
+              <label class="form-check-label text-dark fw-semibold" for="answer{{ answer.id }}">
+                {{ answer.text }}
+              </label>
+            </div>
+          {% endfor %}
+
+          <button type="submit" class="btn btn-success mt-3">Ответить</button>
+
+          {% if incorrect %}
+            <div class="alert alert-danger mt-3">❌ Неверный ответ. Попробуйте ещё раз.</div>
+          {% endif %}
+        </form>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
