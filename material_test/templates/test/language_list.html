@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Тесты{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5 fw-bold">Выберите язык для прохождения теста</h1>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        {% for lang in languages %}
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm hover-shadow transition">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold text-primary">{{ lang.name }}</h5>
+                    <p class="card-text text-secondary small flex-grow-1">{{ lang.description|truncatewords:20 }}</p>
+                    <a href="{% url 'tests_by_language' lang.id %}" class="btn btn-primary mt-auto w-100">
+                        Перейти к тестам →
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

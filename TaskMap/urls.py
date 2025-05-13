@@ -5,6 +5,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('auth_app.urls')),
     path('', include('core.urls')),
-    path('tests/', include('archive_test.urls')),
-    path('material/', include('material.urls')),  # 👈 добавь эту строку
+    path('material/', include('material.urls')),
+    path('material_test/', include('material_test.urls')),
 ]

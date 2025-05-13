@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     'material',
     'core',
     'auth_app',
-    'archive_test',
+    'material_test',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
