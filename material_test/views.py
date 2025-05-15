@@ -19,9 +19,14 @@ def tests_by_language(request, language_id):
         'tests': tests,
         'passed_tests': passed_tests,
     })
+# views.py
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Test, Question, AnswerOption
+from django.urls import reverse
+from django.views.decorators.cache import never_cache
 
+from .models import Test, Question, AnswerOption, TestProgress
+
+@never_cache
 def test_start(request, test_id):
     test = get_object_or_404(Test, id=test_id)
     questions = list(test.question_set.all())
@@ -32,8 +37,9 @@ def test_start(request, test_id):
             'message': "Нет вопросов в этом тесте."
         })
 
-    # Инициализация сессии
-    if 'question_index' not in request.session or request.session.get('test_id') != test.id:
+    # Инициализация сессии при старте нового теста
+    if ('question_index' not in request.session or
+        request.session.get('test_id') != test.id):
         request.session['question_index'] = 0
         request.session['test_id'] = test.id
         request.session['correct_count'] = 0
@@ -51,10 +57,9 @@ def test_start(request, test_id):
             passed_tests.append(test.id)
             request.session['passed_tests'] = passed_tests
 
-        # Очищаем текущий прогресс
-        request.session.pop('question_index', None)
-        request.session.pop('test_id', None)
-        request.session.pop('correct_count', None)
+        # Очищаем прогресс из сессии
+        for key in ('question_index', 'test_id', 'correct_count'):
+            request.session.pop(key, None)
 
         return render(request, 'test/test_start.html', {
             'test': test,
@@ -63,17 +68,22 @@ def test_start(request, test_id):
             'total_questions': total_questions,
         })
 
-    # Отображение текущего вопроса
+    # Обработка GET: проверяем, мог ли быть неправильный ответ
+    incorrect = request.GET.get('incorrect') == '1'
+
     question = questions[index]
     answers = question.answeroption_set.all()
-    incorrect = False
 
-    # Обработка ответа
     if request.method == 'POST':
-        selected_id = int(request.POST.get('answer'))
-        selected_answer = get_object_or_404(AnswerOption, id=selected_id)
-        # Сохраняем результат только если пользователь залогинен
-        if request.user.is_authenticated:
+        try:
+            selected_id = int(request.POST['answer'])
+            selected_answer = get_object_or_404(AnswerOption, id=selected_id)
+        except (KeyError, ValueError):
+            # Если нет выбранного варианта, считаем как неправильный
+            selected_answer = None
+
+        # Сохраняем прогресс, если пользователь авторизован
+        if request.user.is_authenticated and selected_answer is not None:
             TestProgress.objects.create(
                 user=request.user,
                 test=test,
@@ -81,13 +91,20 @@ def test_start(request, test_id):
                 is_correct=selected_answer.is_correct
             )
 
-        if selected_answer.is_correct:
+        # Если ответ правильный — +1 к счёту
+        if selected_answer and selected_answer.is_correct:
             request.session['correct_count'] += 1
-            request.session['question_index'] += 1
-            return redirect('test_start', test_id=test.id)
-        else:
-            incorrect = True  # остаёмся на этом же вопросе
 
+        # В любом случае переходим к следующему вопросу
+        request.session['question_index'] += 1
+
+        # Формируем URL для редиректа (с флагом incorrect=1, если ответ был неверным)
+        url = reverse('test_start', kwargs={'test_id': test.id})
+        if not (selected_answer and selected_answer.is_correct):
+            url += '?incorrect=1'
+        return redirect(url)
+
+    # Рендер текущего вопроса
     return render(request, 'test/test_start.html', {
         'test': test,
         'question': question,
