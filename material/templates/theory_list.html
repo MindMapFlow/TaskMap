@@ -6,8 +6,6 @@
         height: 100%;
         margin: 0;
         background-color: rgb(31, 32, 35) !important;
-        color: #ffffff !important;
-        font-family: Arial, sans-serif !important;
     }
     body {
         display: flex;
@@ -19,42 +17,24 @@
     footer {
         flex-shrink: 0;
     }
-    h2 {
-        color: #ffffff !important;
-        margin-bottom: 20px !important;
-        font-weight: bold !important;
-        border-bottom: 2px solid #9966CC !important;
-        padding-bottom: 10px !important;
-    }
-    .feature-card {
-        background: #2a2a2a !important;
-        border-radius: 15px !important;
-        padding: 20px !important;
-        transition: transform 0.3s ease !important;
-        color: #cccccc !important;
-        margin-bottom: 20px !important;
-        border: 1px solid #444 !important;
-    }
-    .feature-card:hover {
-        transform: translateY(-5px) !important;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+    .card {
+        background: #2a2a2a;
+        border: none;
+        color: #cccccc;
     }
     .card-header {
-        background: #3a3a3a !important;
-        color: #ffffff !important;
-        border-bottom: 1px solid #444 !important;
-        padding: 15px !important;
-        border-radius: 15px 15px 0 0 !important;
+        background: #3a3a3a;
+        color: #ffffff;
     }
     .card-body {
-        padding: 20px !important;
+        padding: 20px;
     }
 </style>
 
 <div class="container py-5">
-    <h2 class="mb-4">Теория по {{ language|upper }}</h2>
+    <h2 class="text-white mb-4">Теория по {{ language|upper }}</h2>
     {% for theory in theories %}
-        <div class="feature-card my-3">
+        <div class="card my-3">
             <div class="card-header">{{ theory.title }}</div>
             <div class="card-body">
                 <p class="card-text">{{ theory.content|linebreaks }}</p>

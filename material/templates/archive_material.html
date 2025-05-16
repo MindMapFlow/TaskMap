@@ -82,6 +82,7 @@
         border: 1px solid #444 !important;
     }
     .feature-card:hover {
+        transform: translateY(-5px) !important;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
     }
     .no-content {
@@ -168,7 +169,7 @@
         const langId = document.getElementById('languageSelect').value;
         const sectionId = document.getElementById('sectionSelect').value;
         if (sectionId) {
-            window.location.href = `?lang=${langId}&section=${sectionId}`; // Исправлено: §ion → &section
+            window.location.href = `?lang=${langId}&section=${sectionId}`;
         } else {
             const topicDropdown = document.getElementById('topicDropdown');
             if (topicDropdown) topicDropdown.style.display = 'none';
@@ -181,7 +182,7 @@
         const sectionId = document.getElementById('sectionSelect').value;
         const topicId = document.getElementById('topicSelect').value;
         if (topicId) {
-            window.location.href = `?lang=${langId}&section=${sectionId}&topic=${topicId}`; // Исправлено: §ion → &section
+            window.location.href = `?lang=${langId}&section=${sectionId}&topic=${topicId}`;
         } else {
             document.getElementById('contentArea').innerHTML = '';
         }

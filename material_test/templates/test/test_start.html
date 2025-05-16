@@ -19,13 +19,11 @@
         .feature-card {
             background: #2a2a2a !important;
             border-radius: 15px !important;
-            transition: transform 0.3s ease !important;
             color: #cccccc !important;
             border: 1px solid #444 !important;
-            padding: 30px !important; /* Увеличен с 20px до 30px */
+            padding: 30px !important;
         }
         .feature-card:hover {
-            transform: translateY(-5px) !important;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
         }
         .custom-btn {
@@ -79,23 +77,23 @@
             <h2 class="text-center">{{ test.title }}</h2>
 
             {% if message %}
-                <div class="alert alert-warning text-dark">{{ message }}</div>
+                <div class="alert alert-warning">{{ message }}</div>
             {% elif finished %}
                 <div class="alert alert-success text-center">
-                    <h4>✅ Поздравляем! Вы прошли тест</h4>
-                    <p class="mt-2">Вы правильно ответили на {{ correct_count }} из {{ total_questions }} вопросов</p>
+                    <h4>✅ Поздравляем! Вы прошли тест.</h4>
+                    <p class="mt-2">Вы правильно ответили на {{ correct_count }} из {{ total_questions }} вопросов.</p>
                     <a href="{% url 'language_list' %}" class="custom-btn custom-btn-primary mt-3">К выбору языков</a>
                 </div>
             {% else %}
                 {% if restart %}
-                    <div class="alert alert-danger">❌ Ответ неверный. Тест начинается заново</div>
+                    <div class="alert alert-danger">❌ Ответ неверный. Тест начинается заново.</div>
                 {% endif %}
 
                 <p class="text-muted text-end">Вопрос {{ question_index|add:1 }} из {{ total_questions }}</p>
 
                 <form method="post">
                     {% csrf_token %}
-                    <h5 class="mb-3 text-white">{{ question.text }}</h5>
+                    <h5 class="mb-3">{{ question.text }}</h5>
 
                     {% for answer in answers %}
                         <div class="form-check mb-2">
@@ -109,7 +107,7 @@
                     <button type="submit" class="custom-btn mt-3">Ответить</button>
 
                     {% if incorrect %}
-                        <div class="alert alert-danger mt-3">❌ Неверный ответ. Попробуйте ещё раз</div>
+                        <div class="alert alert-danger mt-3">❌ Неверный ответ. Попробуйте ещё раз.</div>
                     {% endif %}
                 </form>
             {% endif %}
