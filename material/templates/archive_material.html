@@ -9,130 +9,202 @@
         height: 100%;
         margin: 0;
         background-color: rgb(31, 32, 35) !important;
+        color: #ffffff !important;
+        font-family: Arial, sans-serif !important;
     }
     body {
         display: flex;
         flex-direction: column;
     }
-    .container.mt-4 {
+    .container {
         flex: 1 0 auto;
+        display: flex;
+        max-width: 1600px !important;
+        margin: 0 auto;
     }
     footer {
         flex-shrink: 0;
     }
-    .custom-btn {
-        background-color: #9966CC !important;
-        border-color: #ffffff !important;
-        color: #ffffff !important;
-        padding: 10px 20px;
-        border-radius: 25px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        outline: none !important;
-        box-shadow: 0 4px 15px rgba(153, 102, 204, 0.3);
-    }
-    .custom-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(153, 102, 204, 0.5);
-    }
-    .custom-btn:active {
-        transform: translateY(1px);
-    }
     h2, h3, h4 {
-        color: #ffffff;
+        color: #ffffff !important;
+        margin-bottom: 20px !important;
+        font-weight: bold !important;
+        border-bottom: 2px solid #9966CC !important;
+        padding-bottom: 10px !important;
     }
-    .btn-outline-light {
-        color: #cccccc;
-        border-color: #444;
-    }
-    .btn-outline-light:hover {
-        background-color: #444;
-        color: #ffffff;
-    }
-    .btn-primary {
-        background-color: #9966CC;
-        border-color: #ffffff;
-    }
-    .btn-primary:hover {
-        background-color: #b388ff;
-    }
-    .btn-danger {
-        background-color: #dc3545;
-        border-color: #ffffff;
-    }
-    .btn-danger:hover {
-        background-color: #c82333;
-    }
-    .btn-outline-info {
-        color: #cccccc;
-        border-color: #444;
-    }
-    .btn-outline-info:hover {
-        background-color: #444;
-        color: #ffffff;
-    }
-    .btn-outline-success {
-        color: #cccccc;
-        border-color: #444;
-    }
-    .btn-outline-success:hover {
-        background-color: #444;
-        color: #ffffff;
-    }
-    .card {
+    .sidebar {
+        width: 400px;
         background: #2a2a2a;
-        border: none;
-        color: #cccccc;
+        padding: 20px;
+        border-right: 1px solid #444;
+        height: calc(100vh - 80px);
+        overflow-y: auto;
+    }
+    .dropdown {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .dropdown select {
+        width: 100%;
+        padding: 10px;
+        background-color: #2a2a2a !important;
+        border: 1px solid #9966CC !important;
+        color: #ffffff !important;
+        border-radius: 10px !important;
+        font-size: 14px !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 10px rgba(153, 102, 204, 0.2) !important;
+    }
+    .dropdown select:hover {
+        background-color: #9966CC !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 15px rgba(153, 102, 204, 0.4) !important;
+    }
+    .content {
+        flex-grow: 1;
+        padding: 20px;
+        margin-left: 20px;
+        width: 80%;
+    }
+    .separator {
+        width: 100%;
+        height: 1px;
+        background: #9966CC;
+        margin: 20px 0;
+    }
+    .feature-card {
+        background: #2a2a2a !important;
+        border-radius: 15px !important;
+        padding: 20px !important;
+        transition: transform 0.3s ease !important;
+        color: #cccccc !important;
+        margin-bottom: 20px !important;
+        border: 1px solid #444 !important;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+    }
+    .no-content {
+        background: #2a2a2a !important;
+        border-radius: 15px !important;
+        padding: 20px !important;
+        color: #cccccc !important;
+        border: 1px solid #444 !important;
+        text-align: center;
     }
 </style>
 
 <div class="container py-5">
-    <h2 class="mb-4">Выберите язык программирования:</h2>
-    <div class="btn-group mb-4">
-        {% for lang in languages %}
-            <a href="?lang={{ lang.id }}" class="btn btn-outline-light btn-sm {% if selected_lang == lang.id|stringformat:'s' %}btn-primary{% endif %}">
-                {{ lang.name }}
-            </a>
-        {% endfor %}
-        {% if selected_lang %}
-            <a href="{% url 'theory_view' %}" class="btn btn-danger btn-sm">Сбросить</a>
+    <div class="sidebar">
+        <h2 class="mb-4">Выберите язык программирования:</h2>
+        <div class="dropdown">
+            <select id="languageSelect" onchange="loadSections()">
+                {% for lang in languages %}
+                    <option value="{{ lang.id }}" {% if selected_lang == lang.id|stringformat:'s' %}selected{% endif %}>
+                        {{ lang.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if sections %}
+            <div class="dropdown" id="sectionDropdown" style="display: {% if selected_lang %}block{% else %}none{% endif %};">
+                <select id="sectionSelect" onchange="loadTopics()">
+                    {% for section in sections %}
+                        <option value="{{ section.id }}" {% if selected_section == section.id|stringformat:'s' %}selected{% endif %}>
+                            {{ section.title }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+        {% if topics %}
+            <div class="dropdown" id="topicDropdown" style="display: {% if selected_section %}block{% else %}none{% endif %};">
+                <select id="topicSelect" onchange="loadContent()">
+                    {% for topic in topics %}
+                        <option value="{{ topic.id }}" {% if selected_topic == topic.id|stringformat:'s' %}selected{% endif %}>
+                            {{ topic.title }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
         {% endif %}
     </div>
-
-    {% if selected_lang %}
-        <h3 class="mb-3">Разделы</h3>
-        <div class="btn-group mb-4">
-            {% for section in sections %}
-                <a href="?lang={{ selected_lang }}&section={{ section.id }}" class="btn btn-outline-info btn-sm {% if selected_section == section.id|stringformat:'s' %}btn-primary{% endif %}">
-                    {{ section.title }}
-                </a>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    {% if selected_section %}
-        <h4 class="mb-3">Темы</h4>
-        <div class="btn-group mb-4">
-            {% for topic in topics %}
-                <a href="?lang={{ selected_lang }}&section={{ selected_section }}&topic={{ topic.id }}" class="btn btn-outline-success btn-sm {% if selected_topic == topic.id|stringformat:'s' %}btn-primary{% endif %}">
-                    {{ topic.title }}
-                </a>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    {% if selected_topic and theories %}
-        <h4 class="mb-3">Теория</h4>
-        {% for theory in theories %}
-            <div class="card bg-secondary mb-3">
-                <div class="card-body">
-                    {{ theory.content|linebreaks }}
+    <div class="content">
+        <div id="contentArea">
+            {% if selected_topic and theories %}
+                <h4 class="mb-3">Теория</h4>
+                {% for theory in theories %}
+                    <div class="feature-card">
+                        <div class="card-body">
+                            {{ theory.content|linebreaks }}
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="separator"></div>
+            {% elif not sections %}
+                <div class="no-content">
+                    Материала пока нет.
                 </div>
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <div class="mb-4">
-        <a href="{% url 'index' %}" class="btn custom-btn">← Назад в меню</a>
+            {% endif %}
+        </div>
     </div>
 </div>
+
+<script>
+    function loadSections() {
+        const langId = document.getElementById('languageSelect').value;
+        if (langId) {
+            window.location.href = `?lang=${langId}`;
+        } else {
+            const sectionDropdown = document.getElementById('sectionDropdown');
+            const topicDropdown = document.getElementById('topicDropdown');
+            if (sectionDropdown) sectionDropdown.style.display = 'none';
+            if (topicDropdown) topicDropdown.style.display = 'none';
+            document.getElementById('contentArea').innerHTML = '<div class="no-content">Материала пока нет.</div>';
+        }
+    }
+
+    function loadTopics() {
+        const langId = document.getElementById('languageSelect').value;
+        const sectionId = document.getElementById('sectionSelect').value;
+        if (sectionId) {
+            window.location.href = `?lang=${langId}&section=${sectionId}`;
+        } else {
+            const topicDropdown = document.getElementById('topicDropdown');
+            if (topicDropdown) topicDropdown.style.display = 'none';
+            document.getElementById('contentArea').innerHTML = '';
+        }
+    }
+
+    function loadContent() {
+        const langId = document.getElementById('languageSelect').value;
+        const sectionId = document.getElementById('sectionSelect').value;
+        const topicId = document.getElementById('topicSelect').value;
+        if (topicId) {
+            window.location.href = `?lang=${langId}&section=${sectionId}&topic=${topicId}`;
+        } else {
+            document.getElementById('contentArea').innerHTML = '';
+        }
+    }
+
+    // Показать/скрыть выпадающие меню
+    document.getElementById('languageSelect').addEventListener('change', function() {
+        const sectionDropdown = document.getElementById('sectionDropdown');
+        const topicDropdown = document.getElementById('topicDropdown');
+        if (sectionDropdown) {
+            sectionDropdown.style.display = this.value ? 'block' : 'none';
+        }
+        if (topicDropdown) {
+            topicDropdown.style.display = 'none';
+        }
+    });
+
+    document.getElementById('sectionSelect').addEventListener('change', function() {
+        const topicDropdown = document.getElementById('topicDropdown');
+        if (topicDropdown) {
+            topicDropdown.style.display = this.value ? 'block' : 'none';
+        }
+    });
+</script>
 {% endblock %}
