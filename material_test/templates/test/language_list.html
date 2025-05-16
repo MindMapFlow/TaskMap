@@ -4,17 +4,71 @@
 {% block title %}Тесты{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-6 px-5">
+    <style>
+        body {
+            background-color: rgb(31, 32, 35) !important;
+            color: #ffffff !important;
+            font-family: Arial, sans-serif !important;
+        }
+        h1 {
+            color: #ffffff !important;
+            margin-bottom: 40px !important;
+            font-weight: bold !important;
+            border-bottom: 2px solid #9966CC !important;
+            padding-bottom: 10px !important;
+        }
+        .feature-card {
+            background: #2a2a2a !important;
+            border-radius: 15px !important;
+            transition: transform 0.3s ease !important;
+            color: #cccccc !important;
+            border: 1px solid #444 !important;
+            height: 100% !important;
+            padding: 30px !important;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+        }
+        .custom-btn {
+            background-color: #9966CC !important;
+            border: 1px solid #ffffff !important;
+            color: #ffffff !important;
+            padding: 10px 20px !important;
+            border-radius: 10px !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 2px 10px rgba(153, 102, 204, 0.2) !important;
+            text-decoration: none !important;
+            font-size: 14px !important;
+            display: block !important;
+            text-align: center !important;
+        }
+        .custom-btn:hover {
+            background-color: #b388ff !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 15px rgba(153, 102, 204, 0.4) !important;
+        }
+        .card-title {
+            color: #ffffff !important;
+            font-weight: bold !important;
+        }
+        .card-text {
+            color: #cccccc !important;
+            flex-grow: 1 !important;
+        }
+    </style>
+
     <h1 class="text-center mb-5 fw-bold">Выберите язык для прохождения теста</h1>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         {% for lang in languages %}
         <div class="col">
-            <div class="card h-100 border-0 shadow-sm hover-shadow transition">
+            <div class="feature-card h-100">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold text-primary">{{ lang.name }}</h5>
-                    <p class="card-text text-secondary small flex-grow-1">{{ lang.description|truncatewords:20 }}</p>
-                    <a href="{% url 'tests_by_language' lang.id %}" class="btn btn-primary mt-auto w-100">
-                        Перейти к тестам →
+                    <h5 class="card-title">{{ lang.name }}</h5>
+                    <p class="card-text small">{{ lang.description|truncatewords:20 }}</p>
+                    <a href="{% url 'tests_by_language' lang.id %}" class="custom-btn mt-auto">
+                        Перейти к тестам
                     </a>
                 </div>
             </div>

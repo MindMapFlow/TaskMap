@@ -2,52 +2,118 @@
 {% block title %}{{ test.title }}{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-  <div class="card shadow-lg">
-    <div class="card-body">
+<div class="container py-6 px-5">
+    <style>
+        body {
+            background-color: rgb(31, 32, 35) !important;
+            color: #ffffff !important;
+            font-family: Arial, sans-serif !important;
+        }
+        h2 {
+            color: #ffffff !important;
+            margin-bottom: 30px !important;
+            font-weight: bold !important;
+            border-bottom: 2px solid #9966CC !important;
+            padding-bottom: 10px !important;
+        }
+        .feature-card {
+            background: #2a2a2a !important;
+            border-radius: 15px !important;
+            transition: transform 0.3s ease !important;
+            color: #cccccc !important;
+            border: 1px solid #444 !important;
+            padding: 30px !important; /* Увеличен с 20px до 30px */
+        }
+        .feature-card:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+        }
+        .custom-btn {
+            background-color: #28a745 !important;
+            border: 1px solid #ffffff !important;
+            color: #ffffff !important;
+            padding: 10px 20px !important;
+            border-radius: 10px !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.2) !important;
+            text-decoration: none !important;
+            font-size: 14px !important;
+        }
+        .custom-btn:hover {
+            background-color: #218838 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4) !important;
+        }
+        .custom-btn-primary {
+            background-color: #9966CC !important;
+            border: 1px solid #ffffff !important;
+            box-shadow: 0 2px 10px rgba(153, 102, 204, 0.2) !important;
+        }
+        .custom-btn-primary:hover {
+            background-color: #b388ff !important;
+            box-shadow: 0 4px 15px rgba(153, 102, 204, 0.4) !important;
+        }
+        .text-muted {
+            color: #cccccc !important;
+        }
+        .form-check-label {
+            color: #cccccc !important;
+        }
+        .form-check-input:checked {
+            background-color: #9966CC !important;
+            border-color: #9966CC !important;
+        }
+        .alert-warning, .alert-success, .alert-danger {
+            background-color: #2a2a2a !important;
+            color: #cccccc !important;
+            border: 1px solid #444 !important;
+            border-radius: 10px !important;
+        }
+        .alert-success h4, .alert-danger h4 {
+            color: #ffffff !important;
+        }
+    </style>
 
-      <h2 class="mb-4 text-center text-dark">{{ test.title }}</h2>
+    <div class="feature-card">
+        <div class="card-body">
+            <h2 class="text-center">{{ test.title }}</h2>
 
-      {% if message %}
-        <div class="alert alert-warning text-dark">{{ message }}</div>
+            {% if message %}
+                <div class="alert alert-warning text-dark">{{ message }}</div>
+            {% elif finished %}
+                <div class="alert alert-success text-center">
+                    <h4>✅ Поздравляем! Вы прошли тест</h4>
+                    <p class="mt-2">Вы правильно ответили на {{ correct_count }} из {{ total_questions }} вопросов</p>
+                    <a href="{% url 'language_list' %}" class="custom-btn custom-btn-primary mt-3">К выбору языков</a>
+                </div>
+            {% else %}
+                {% if restart %}
+                    <div class="alert alert-danger">❌ Ответ неверный. Тест начинается заново</div>
+                {% endif %}
 
-      {% elif finished %}
-  <div class="alert alert-success text-center text-dark">
-    <h4>✅ Поздравляем! Вы прошли тест.</h4>
-    <p class="mt-2">Вы правильно ответили на {{ correct_count }} из {{ total_questions }} вопросов.</p>
-    <a href="{% url 'language_list' %}" class="btn btn-primary mt-3">К выбору языков</a>
-  </div>
+                <p class="text-muted text-end">Вопрос {{ question_index|add:1 }} из {{ total_questions }}</p>
 
-      {% else %}
-        {% if restart %}
-          <div class="alert alert-danger">❌ Ответ неверный. Тест начинается заново.</div>
-        {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <h5 class="mb-3 text-white">{{ question.text }}</h5>
 
-        <p class="text-muted text-end">Вопрос {{ question_index|add:1 }} из {{ total_questions }}</p>
+                    {% for answer in answers %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="answer" id="answer{{ answer.id }}" value="{{ answer.id }}" required>
+                            <label class="form-check-label fw-semibold" for="answer{{ answer.id }}">
+                                {{ answer.text }}
+                            </label>
+                        </div>
+                    {% endfor %}
 
-        <form method="post">
-          {% csrf_token %}
-          <h5 class="mb-3 text-dark">{{ question.text }}</h5>
+                    <button type="submit" class="custom-btn mt-3">Ответить</button>
 
-          {% for answer in answers %}
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="answer" id="answer{{ answer.id }}" value="{{ answer.id }}" required>
-              <label class="form-check-label text-dark fw-semibold" for="answer{{ answer.id }}">
-                {{ answer.text }}
-              </label>
-            </div>
-          {% endfor %}
-
-          <button type="submit" class="btn btn-success mt-3">Ответить</button>
-
-          {% if incorrect %}
-            <div class="alert alert-danger mt-3">❌ Неверный ответ. Попробуйте ещё раз.</div>
-          {% endif %}
-        </form>
-      {% endif %}
-
+                    {% if incorrect %}
+                        <div class="alert alert-danger mt-3">❌ Неверный ответ. Попробуйте ещё раз</div>
+                    {% endif %}
+                </form>
+            {% endif %}
+        </div>
     </div>
-  </div>
 </div>
-
 {% endblock %}
